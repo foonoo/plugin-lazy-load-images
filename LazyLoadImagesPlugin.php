@@ -12,7 +12,7 @@ class LazyLoadImagesPlugin extends Plugin
     public function getEvents()
     {
         return [
-            PageOutputGenerated::class => [$this, 'modifyImageTags'],
+            ContentOutputGenerated::class => [$this, 'modifyImageTags'],
             AssetPipelineReady::class => function(AssetPipelineReady $event) {
                 $pipeline = $event->getAssetPipeline();
                 $pipeline->addJavascript(__DIR__ . "/assets/lazy_load.js");
@@ -23,6 +23,10 @@ class LazyLoadImagesPlugin extends Plugin
 
     public function modifyImageTags(ContentOutputGenerated $event)
     {
-        $dom = $event->getDOM();
+        try{
+            $dom = $event->getDOM();
+        } catch (\TypeError $e) {
+            return;
+        }
     }
 }
